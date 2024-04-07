@@ -1,0 +1,205 @@
+//@version=5
+max_bars = 2
+indicator("Market Flows mirbyte", overlay = true, max_bars_back= max_bars)
+
+H_col = input.color(color.rgb(0, 0, 0),  title="Table", group= "Table Styling", inline= "1") // color.rgb(41, 42, 47)
+table_col = input.color(color.rgb(89, 125, 197),  title="Table", group= "Table Styling", inline= "1")
+//table_col2 = input.color(color.rgb(130, 130, 130, 0),  title="Table", group= "Table Styling", inline= "1")
+text_col  = input.color(color.rgb(0, 0, 0), title="Text", group= "Table Styling", inline= "2")
+text_col2  = input.color(color.rgb(196, 237, 255), title="Text", group= "Table Styling", inline= "2")
+warning_col = color.rgb(243, 249, 61, 15)
+normal_col = color.rgb(0, 0, 0) // color.rgb(137, 138, 139)
+
+var tbl = table.new(position.top_right, 3, 25, frame_color=color.rgb(0, 0, 0), frame_width=1, border_width=1, border_color=color.rgb(43, 45, 50))
+
+// Header //
+table.cell(tbl, 0, 0, "M0_BTC", bgcolor = H_col, text_color = color.rgb(130, 130, 130, 1), text_size= size.tiny)
+table.cell(tbl, 1, 0, "Change %", bgcolor = H_col, text_color= color.rgb(255, 255, 255), text_size= size.tiny)
+
+// Tickers // 
+ticker_1 = input("EUBUND")
+ticker_2 = input("US01Y")
+ticker_3 = input("US03Y")
+ticker_4 = input("US10Y")
+ticker_5 = input("EURX")
+ticker_6 = input("DXY")
+ticker_7 = input("JPYX")
+ticker_8 = input("BTCUSD")
+ticker_9 = input("US500")
+ticker_10 = input("UK100")
+ticker_11 = input("EU50")
+ticker_12 = input("JP225")
+ticker_13 = input("GOLD")
+ticker_14 = input("SILVER")
+ticker_15 = input("USOIL")
+ticker_16 = input("GBPNZD")
+ticker_17 = input("GBPAUD")
+ticker_18 = input("GBPUSD")
+ticker_19 = input("GBPCAD")
+ticker_20 = input("GBPCHF")
+
+table.cell(tbl, 0, 1, ticker_1, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 2, ticker_2, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 3, ticker_3, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 4, ticker_4, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 5, ticker_5, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 6, ticker_6, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 7, ticker_7, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 8, ticker_8, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 9, ticker_9, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 10, ticker_10, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 11, ticker_11, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 12, ticker_12, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 13, ticker_13, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 14, ticker_14, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 15, ticker_15, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 16, ticker_16, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 17, ticker_17, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 18, ticker_18, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 19, ticker_19, bgcolor=table_col, text_color=text_col, text_size=size.small)
+table.cell(tbl, 0, 20, ticker_20, bgcolor=table_col, text_color=text_col, text_size=size.small)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///Data///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+warning_tresh_bonds = 1.9
+warning_tresh_crypto = 3.8
+warning_tresh_dxy = 0.8
+warning_tresh_jpyx = 1.2
+warning_tresh_eurx = 0.5
+warning_tresh_sp500 = 1.9
+warning_tresh_jp225 = 1.9
+warning_tresh_uk100 = 1.5
+warning_tresh_eu50 = 1.7
+warning_tresh_gold = 2
+warning_tresh_silver = 2.9
+warning_tresh_oil = 3
+warning_tresh_gbp = 0.9
+
+// BONDS
+aaD_open = request.security(ticker_1, "D", open)
+aaD_close = request.security(ticker_1, "1", close)
+aaD_change = (aaD_close - aaD_open) / aaD_open
+aacolor_change = math.abs(aaD_change * 100)
+table.cell(tbl, 1, 1, str.tostring(aaD_change * 100, format.percent), bgcolor = normal_col, text_color = aacolor_change >= warning_tresh_bonds ? warning_col : text_col2, text_size = size.small)
+
+bbD_open = request.security(ticker_2, "D", open)
+bbD_close = request.security(ticker_2, "D", close)
+bbD_change = (bbD_close - bbD_open) / bbD_open
+bbcolor_change = math.abs(bbD_change * 100)
+table.cell(tbl, 1, 2, str.tostring(bbD_change * 100, format.percent), bgcolor = normal_col, text_color = bbcolor_change >= warning_tresh_bonds ? warning_col : text_col2, text_size = size.small)
+
+ccD_open = request.security(ticker_3, "D", open)
+ccD_close = request.security(ticker_3, "D", close)
+ccD_change = (ccD_close - ccD_open) / ccD_open
+cccolor_change = math.abs(ccD_change * 100)
+table.cell(tbl, 1, 3, str.tostring(ccD_change * 100, format.percent), bgcolor = normal_col, text_color = cccolor_change >= warning_tresh_bonds ? warning_col : text_col2, text_size = size.small)
+
+ddD_open = request.security(ticker_4, "D", open)
+ddD_close = request.security(ticker_4, "D", close)
+ddD_change = (ddD_close - ddD_open) / ddD_open
+ddcolor_change = math.abs(ddD_change * 100)
+table.cell(tbl, 1, 4, str.tostring(ddD_change * 100, format.percent), bgcolor = normal_col, text_color = ddcolor_change >= warning_tresh_bonds ? warning_col : text_col2, text_size = size.small)
+
+// XXXXXXXX
+eeD_open = request.security(ticker_5, "D", open)
+eeD_close = request.security(ticker_5, "D", close)
+eeD_change = (eeD_close - eeD_open) / eeD_open
+eecolor_change = math.abs(eeD_change * 100)
+table.cell(tbl, 1, 5, str.tostring(eeD_change * 100, format.percent), bgcolor = normal_col, text_color = eecolor_change >= warning_tresh_eurx ? warning_col : text_col2, text_size = size.small)
+
+ffD_open = request.security(ticker_6, "D", open)
+ffD_close = request.security(ticker_6, "D", close)
+ffD_change = (ffD_close - ffD_open) / ffD_open
+ffcolor_change = math.abs(ffD_change * 100)
+table.cell(tbl, 1, 6, str.tostring(ffD_change * 100, format.percent), bgcolor = normal_col, text_color = ffcolor_change >= warning_tresh_dxy ? warning_col : text_col2, text_size = size.small)
+
+ggD_open = request.security(ticker_7, "D", open)
+ggD_close = request.security(ticker_7, "D", close)
+ggD_change = (ggD_close - ggD_open) / ggD_open
+ggcolor_change = math.abs(ggD_change * 100)
+table.cell(tbl, 1, 7, str.tostring(ggD_change * 100, format.percent), bgcolor = normal_col, text_color = ggcolor_change >= warning_tresh_jpyx ? warning_col : text_col2, text_size = size.small)
+
+// CRYPTO ₿
+hhD_open = request.security(ticker_8, "D", open)
+hhD_close = request.security(ticker_8, "D", close)
+hhD_change = (hhD_close - hhD_open) / hhD_open
+hhcolor_change = math.abs(hhD_change * 100)
+table.cell(tbl, 1, 8, str.tostring(hhD_change * 100, format.percent), bgcolor = normal_col, text_color = hhcolor_change >= warning_tresh_crypto ? warning_col : text_col2, text_size = size.small)
+
+// INDICES
+iiD_open = request.security(ticker_9, "D", open)
+iiD_close = request.security(ticker_9, "D", close)
+iiD_change = (iiD_close - iiD_open) / iiD_open
+iicolor_change = math.abs(iiD_change * 100)
+table.cell(tbl, 1, 9, str.tostring(iiD_change * 100, format.percent), bgcolor = normal_col, text_color = iicolor_change >= warning_tresh_sp500 ? warning_col : text_col2, text_size = size.small)
+
+jjD_open = request.security(ticker_10, "D", open)
+jjD_close = request.security(ticker_10, "D", close)
+jjD_change = (jjD_close - jjD_open) / jjD_open
+jjcolor_change = math.abs(jjD_change * 100)
+table.cell(tbl, 1, 10, str.tostring(jjD_change * 100, format.percent), bgcolor = normal_col, text_color = jjcolor_change >= warning_tresh_uk100 ? warning_col : text_col2, text_size = size.small)
+
+kkD_open = request.security(ticker_11, "D", open)
+kkD_close = request.security(ticker_11, "D", close)
+kkD_change = (kkD_close - kkD_open) / kkD_open
+kkcolor_change = math.abs(kkD_change * 100)
+table.cell(tbl, 1, 11, str.tostring(kkD_change * 100, format.percent), bgcolor = normal_col, text_color = kkcolor_change >= warning_tresh_eu50 ? warning_col : text_col2, text_size = size.small)
+
+llD_open = request.security(ticker_12, "D", open)
+llD_close = request.security(ticker_12, "D", close)
+llD_change = (llD_close - llD_open) / llD_open
+llcolor_change = math.abs(llD_change * 100)
+table.cell(tbl, 1, 12, str.tostring(llD_change * 100, format.percent), bgcolor = normal_col, text_color = llcolor_change >= warning_tresh_jp225 ? warning_col : text_col2, text_size = size.small)
+
+// COMMODITIES
+mmD_open = request.security(ticker_13, "D", open)
+mmD_close = request.security(ticker_13, "D", close)
+mmD_change = (mmD_close - mmD_open) / mmD_open
+mmcolor_change = math.abs(mmD_change * 100)
+table.cell(tbl, 1, 13, str.tostring(mmD_change * 100, format.percent), bgcolor = normal_col, text_color = mmcolor_change >= warning_tresh_gold ? warning_col : text_col2, text_size = size.small)
+
+nnD_open = request.security(ticker_14, "D", open)
+nnD_close = request.security(ticker_14, "D", close)
+nnD_change = (nnD_close - nnD_open) / nnD_open
+nncolor_change = math.abs(nnD_change * 100)
+table.cell(tbl, 1, 14, str.tostring(nnD_change * 100, format.percent), bgcolor = normal_col, text_color = nncolor_change >= warning_tresh_silver ? warning_col : text_col2, text_size = size.small)
+
+ooD_open = request.security(ticker_15, "D", open)
+ooD_close = request.security(ticker_15, "D", close)
+ooD_change = (ooD_close - ooD_open) / ooD_open
+oocolor_change = math.abs(ooD_change * 100)
+table.cell(tbl, 1, 15, str.tostring(ooD_change * 100, format.percent), bgcolor = normal_col, text_color = oocolor_change >= warning_tresh_oil ? warning_col : text_col2, text_size = size.small)
+
+// FOREX
+ppD_open = request.security(ticker_16, "D", open)
+ppD_close = request.security(ticker_16, "D", close)
+ppD_change = (ppD_close - ppD_open) / ppD_open
+ppcolor_change = math.abs(ppD_change * 100)
+table.cell(tbl, 1, 16, str.tostring(ppD_change * 100, format.percent), bgcolor = normal_col, text_color = ppcolor_change >= warning_tresh_gbp ? warning_col : text_col2, text_size = size.small)
+
+qqD_open = request.security(ticker_17, "D", open)
+qqD_close = request.security(ticker_17, "D", close)
+qqD_change = (qqD_close - qqD_open) / qqD_open
+qqcolor_change = math.abs(qqD_change * 100)
+table.cell(tbl, 1, 17, str.tostring(qqD_change * 100, format.percent), bgcolor = normal_col, text_color = qqcolor_change >= warning_tresh_gbp ? warning_col : text_col2, text_size = size.small)
+
+rrD_open = request.security(ticker_18, "D", open)
+rrD_close = request.security(ticker_18, "D", close)
+rrD_change = (rrD_close - rrD_open) / rrD_open
+rrcolor_change = math.abs(rrD_change * 100)
+table.cell(tbl, 1, 18, str.tostring(rrD_change * 100, format.percent), bgcolor = normal_col, text_color = rrcolor_change >= warning_tresh_gbp ? warning_col : text_col2, text_size = size.small)
+
+ssD_open = request.security(ticker_19, "D", open)
+ssD_close = request.security(ticker_19, "D", close)
+ssD_change = (ssD_close - ssD_open) / ssD_open
+sscolor_change = math.abs(ssD_change * 100)
+table.cell(tbl, 1, 19, str.tostring(ssD_change * 100, format.percent), bgcolor = normal_col, text_color = sscolor_change >= warning_tresh_gbp ? warning_col : text_col2, text_size = size.small)
+
+ttD_open = request.security(ticker_20, "D", open)
+ttD_close = request.security(ticker_20, "D", close)
+ttD_change = (ttD_close - ttD_open) / ttD_open
+ttcolor_change = math.abs(ttD_change * 100)
+// Changed from background color to text color warning
+//table.cell(tbl, 1, 20, str.tostring(ttD_change * 100, format.percent), bgcolor = ttcolor_change >= warning_tresh_gbp ? warning_col : normal_col, text_color = text_col2, text_size = size.small)
+table.cell(tbl, 1, 20, str.tostring(ttD_change * 100, format.percent), bgcolor = normal_col, text_color = ttcolor_change >= warning_tresh_gbp ? warning_col : text_col2, text_size = size.small)
+
