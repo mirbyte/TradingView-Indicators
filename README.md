@@ -1,4 +1,4 @@
 # TradingView-Indicators
 ## Market Flows Screener
 <code style="color:blue">test</code>
-$${\color{blue}Blue}$$
+$${\color{blue}test}$$
