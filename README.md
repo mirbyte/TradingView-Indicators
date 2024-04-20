@@ -7,7 +7,7 @@ Quickly scan through the markets and see where the money is moving. Shows the da
 
 
 ## Usage
-Copy the code in .txt file and paste into TradingView (open -> new indicator).
+Copy the code in .txt file and paste into TradingView (open -> new indicator)
 
 
 $${\color{blue}test}$$
