@@ -73,7 +73,7 @@ warning_tresh_eu50 = 1.7
 warning_tresh_gold = 2
 warning_tresh_silver = 2.9
 warning_tresh_oil = 3
-warning_tresh_gbp = 0.9
+warning_tresh_gbp = 0.6
 
 // BONDS
 aaD_open = request.security(ticker_1, "D", open)
