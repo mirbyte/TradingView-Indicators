@@ -12,5 +12,3 @@ I made this like a year ago. Feel free to edit for your own use, im not interest
 ## Usage
 Copy the code in .txt file and paste into TradingView (open -> new indicator)
 
-
-$${\color{blue}test}$$
