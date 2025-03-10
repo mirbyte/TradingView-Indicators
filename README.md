@@ -1,4 +1,4 @@
-# TradingView-Indicators
+# mirbyte-TradingView-Indicators
 ## Market Flow Screener
 Quickly scan through the markets and see where the money is moving. Shows the daily change for selected tickers. There's currently my own tresholds applied for each asset that warn about uncommon movements. Changing the tickers is simple but tresholds not so.
 
